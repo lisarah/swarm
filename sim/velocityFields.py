@@ -8,6 +8,7 @@ Created on Mon Jan 07 18:07:33 2019
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def showField(X, Y, U, V, returnHandle = False):
     fig, ax = plt.subplots()
     ax.set_title("Velocity field visualization")
@@ -16,10 +17,9 @@ def showField(X, Y, U, V, returnHandle = False):
                    scale=1 / 0.15)
     qk = ax.quiverkey(Q, 0.9, 0.9, 1, r'$1 \frac{m}{s}$', labelpos='E',
                        coordinates='figure')
-#    ax.scatter(X, Y, color='k', s=5);
-    
     plt.show()
     if returnHandle:
         return fig, ax;
     else:
         return;
+        
