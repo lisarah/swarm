@@ -8,18 +8,20 @@ import sim.makeMovie as mv
 import sim.swarm as sw
 import numpy as np
 import random as rn
+import matplotlib.pyplot as plt
 #--------------- velocity field definition ---------------#
 xMax = 2 * np.pi; yMax = 2 * np.pi; resolution = 0.2;
 X, Y = np.meshgrid(np.arange(0, xMax, resolution), np.arange(0, yMax, resolution));
-speedFactor = 2.;
+speedFactor = 2.5;
 U = np.cos(X)/speedFactor;
 V = np.sin(Y)/speedFactor;
 xIndMax, yIndMax = X.shape;
 
 
 #-------------- add drones ------------------#
-droneNum = 5;
-swarm = []
+droneNum = 15;
+swarm = [];
+print " Initial Positions ";
 for d in range(droneNum):
     xInit = rn.randint(0, xIndMax); yInit = rn.randint(0, yIndMax);
     print xInit, "  ", yInit;
@@ -28,3 +30,4 @@ for d in range(droneNum):
     
 #-------------- make movie ------------------#
 mv.makeMovie(X,Y,U,V, swarm, 30);
+plt.close('all');

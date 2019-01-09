@@ -23,9 +23,7 @@ of working with even the Agg backend. This is not recommended for use in an
 interactive setting.
 
 """
-
 def makeMovie(X,Y, U,V, swarm, Time):
-
     FFMpegWriter = manimation.writers['ffmpeg']
     metadata = dict(title='Movie Test', artist='Matplotlib',
                     comment='Movie support!');
@@ -33,9 +31,8 @@ def makeMovie(X,Y, U,V, swarm, Time):
     
     fig, velField = vf.showField(X,Y,U,V, returnHandle =True);
     swarmPlot  = sw.showSwarm(swarm,velField);
-
     
-    with writer.saving(fig, "writer_test.mp4", 100):
+    with writer.saving(fig, "swarm_sim.mp4", 100):
         for i in range(Time):
             nSwarmPlot = sw.moveSwarm(swarmPlot, velField, U,V, swarm);
             swarmPlot = nSwarmPlot;
