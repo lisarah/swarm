@@ -8,38 +8,54 @@ import collections as collections
 
 drone = collections.namedtuple("drone", "x y vx vy");
 class drone:
-    x = 0; y = 0; vx = 0; vy = 0;
-    def __init__(self, xInd, yInd, vx, vy):
+    def x(self):
+        return self.xInd *self.resolution;
+    
+    def y(self):
+        return self.yInd *self.resolution;
+    
+    def increment(self, velX, velY): 
+        # given current velocity, increment current x/y indices
+        xPos = self.x() +velX;
+        yPos = self.y() + velY;
+#        print xPos, "  ", yPos;
+        self.vx = velX; 
+        self.vy = velY;
+#        print int(xPos/self.resolution), "  ",  int(yPos/self.resolution);
+        self.xInd = int(xPos/self.resolution); 
+        self.yInd = int(yPos/self.resolution);
+        
+    def __setattr__(self, name, value): 
+        if name == "xInd":
+            value =  max( min(self.XMax, value), 0);
+        elif name == "yInd": 
+            value = max( min(self.YMax, value), 0);
+        self.__dict__[name] = value;  
+        
+    def __init__(self, xInd, yInd, xIndMax, yIndMax, resolution):
+        self.XMax = xIndMax;
+        self.YMax = yIndMax;
         self.xInd = xInd;
         self.yInd = yInd;
-        self.vx = vx;
-        self.vy = vy;
+
+        self.vx = 0;
+        self.vy = 0;
+        self.resolution = resolution;
+        print xInd, "   ", yInd;
         
-def moveSwarm(swarmPlot, velField, X, Y, VX, VY, swarm):
+def moveSwarm(swarmPlot, velField, VX, VY, swarm):
     swarmPlot.remove();
-    XMax, YMax = X.shape;
     for drone in swarm:
-        print drone.x, "  ", drone.y; 
-        # need a drone index function
-        drone.vx += VX[int(drone.x), int(drone.y)];
-        drone.vy += VY[int(drone.x), int(drone.y)];
-        drone.x += drone.vx;
-        drone.y += drone.vy;
-        if drone.x > X[XMax - 1]:
-            drone.x = X[XMax - 1];
-        elif drone.x < 0:
-            drone.x = 0;
-        if drone.y >  Y[YMax - 1]:
-            drone.y = YMax - 1.;
-        elif drone.y < 0:
-            drone.y = 0;            
+        drone.increment(VX[drone.xInd, drone.yInd], VY[drone.xInd, drone.yInd]);
     newSwarm = showSwarm(swarm, velField);    
     return newSwarm;
 
 def showSwarm(swarm, velField):
     swarmX = []; swarmY = [];
     for drone in swarm:
-        swarmX.append(drone.x);
-        swarmY.append(drone.y);
-    newPos = velField.scatter(swarmX, swarmY, color='r', s=10);
+        swarmX.append(drone.x());
+        swarmY.append(drone.y());
+    print swarmX;
+    print swarmY;
+    newPos = velField.scatter(swarmX, swarmY, color='r', s=15);
     return newPos;

@@ -37,8 +37,7 @@ def makeMovie(X,Y, U,V, swarm, Time):
     
     with writer.saving(fig, "writer_test.mp4", 100):
         for i in range(Time):
-            nSwarmPlot = sw.moveSwarm(swarmPlot, velField, X,Y,U,V, swarm);
+            nSwarmPlot = sw.moveSwarm(swarmPlot, velField, U,V, swarm);
             swarmPlot = nSwarmPlot;
-            
             writer.grab_frame();
             
