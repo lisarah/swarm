@@ -5,6 +5,7 @@ Created on Mon Jan 07 18:58:44 2019
 @author: sarah
 """
 import collections as collections
+import numpy as np
 
 drone = collections.namedtuple("drone", "x y vx vy");
 class drone:
@@ -53,7 +54,22 @@ def showSwarm(swarm, velField):
     for drone in swarm:
         swarmX.append(drone.x());
         swarmY.append(drone.y());
-#    print swarmX;
-#    print swarmY;
+
     newPos = velField.scatter(swarmX, swarmY, color='r', s=15);
     return newPos;
+
+def extractPos(swarm):
+    dataNum =  len(swarm);
+    points= np.zeros((2, dataNum));
+    droneIter = 0;
+
+    for drone in swarm:
+        points[0, droneIter] = drone.x();
+        points[1, droneIter] = drone.y();
+        droneIter +=1;
+    return points;
+    
+    
+    
+    
+    

@@ -19,7 +19,7 @@ xIndMax, yIndMax = X.shape;
 
 
 #-------------- add drones ------------------#
-droneNum = 15;
+droneNum = 20;
 swarm = [];
 print " Initial Positions ";
 for d in range(droneNum):
