@@ -6,10 +6,11 @@ Created on Mon Jan 07 18:58:44 2019
 """
 import collections as collections
 import numpy as np
+import math as math
 
 drone = collections.namedtuple("drone", "x y vx vy");
 class drone:
-    def __init__(self, xInd, yInd, xIndMax, yIndMax, resolution):
+    def __init__(self, xInd, yInd, xIndMax, yIndMax, resolution, did = 0):
         self.XMax = xIndMax;
         self.YMax = yIndMax;
         self.xInd = xInd;
@@ -17,7 +18,7 @@ class drone:
         self.vx = 0;
         self.vy = 0;
         self.resolution = resolution;
-        
+        self.id = did;
     def x(self):
         return self.xInd *self.resolution;
     
@@ -41,6 +42,8 @@ class drone:
         elif name == "yInd": 
             value = max( min(self.YMax, value), 0);
         self.__dict__[name] = value;  
+    def distance(self, drone):
+        return math.hypot(self.x() - drone.x(), self.y() - drone.y());
           
 def moveSwarm(swarmPlot, velField, VX, VY, swarm):
     swarmPlot.remove();
