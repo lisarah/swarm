@@ -59,6 +59,6 @@ def simulateKernel(swarmPlot, velField,heatMap):
     return nSwarmPlot, nVelField, nheatMap;
 
 #-------------- show results ------------------#
-mv.makeMovie(fig, swarmPlot, velField, heatMap, 30, simulateKernel);
+mv.makeMovie("swarm_sim_diff.mp4",fig, swarmPlot, velField, heatMap, 30, simulateKernel);
 plt.close('all');
 

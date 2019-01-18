@@ -43,8 +43,8 @@ targDrone = swarm[0];
 fig, simAx = vf.showField(X,Y,U,V, returnHandle =True);
 swarmPlot  = sw.showSwarm(swarm,simAx);
 
-def simulateKernel(swarmPlot):
-    nSwarmPlot = sw.moveSwarm(swarmPlot, simAx, U,V, swarm);
+def simulateKernel(swarmPlot, a, b):
+    nSwarmPlot = sw.moveSwarm(swarmPlot, simAx, swarm);
     neighbours = est.nearestNeighbours(swarm, targDrone, 1.0);
     points = np.zeros((2, len(neighbours)));
     for ind in xrange(len(neighbours)):
@@ -52,10 +52,10 @@ def simulateKernel(swarmPlot):
     distribution = est.GaussianKde(points,X,Y)       
     simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
     extent=[0, 2*np.pi, 0, 2*np.pi]);                    
-    return nSwarmPlot;
+    return nSwarmPlot, a, b;
 
 #-------------- show results ------------------#
-mv.makeMovie(fig, swarmPlot, 30, simulateKernel);
+mv.makeMovie("swarm_sim_kernel.mp4", fig, swarmPlot, None, None, 30, simulateKernel);
 plt.close('all');
 #fig, velField = vf.showField(X,Y,U,V, returnHandle =True);            
 #velField.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 

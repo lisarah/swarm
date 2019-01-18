@@ -14,7 +14,7 @@ def GaussianKde(points, X,Y,isSwarm = False):
         points = np.zeros((2, len(neighbours)));
         for ind in xrange(len(neighbours)):
             points[:,ind] = neighbours[ind];
-    bandFactor = 0.4; # bandwith of Gaussian used
+    bandFactor = 1.0; # bandwith of Gaussian used
     # Take input swarm object with k many 
     kde = st.gaussian_kde(points, bandFactor);
     # We reshape the grid for the kde() function.

@@ -32,10 +32,10 @@ for d in range(droneNum):
 fig, velField = vf.showField(X,Y,U,V, returnHandle =True);
 swarmPlot  = sw.showSwarm(swarm,velField);
 
-def simulateSwarm(swarmPlot):
-    nSwarmPlot = sw.moveSwarm(swarmPlot, velField, U,V, swarm);              
-    return nSwarmPlot;
+def simulateSwarm(swarmPlot,a,b):
+    nSwarmPlot = sw.moveSwarm(swarmPlot, velField, swarm);              
+    return nSwarmPlot,a,b;
     
 #-------------- make movie ------------------#
-mv.makeMovie(fig, swarmPlot, 30, simulateSwarm);
+mv.makeMovie("swarm_sim_demo.mp4", fig, swarmPlot,None,None, 30, simulateSwarm);
 plt.close('all');
