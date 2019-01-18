@@ -7,9 +7,9 @@ Created on Tue Jan 15 23:41:15 2019
 """
 import numpy as np
 import random as rn
-import sim.swarm as sw
-import est.Gaussian as est
 import matplotlib.pyplot as plt
+import est.Gaussian as est
+import sim.swarm as sw
 import sim.velocityFields as vf
 import sim.makeMovie as mv
 #--------------- velocity field definition ---------------#
@@ -30,46 +30,35 @@ for d in range(droneNum):
     print xInit, "  ", yInit;
     swarm.append(sw.drone(xInit, yInit, 
                           xIndMax - 1, yIndMax - 1, resolution, d+1));
-                          
-#-------------- gaussian estimation ------------------#
-#targDrone = swarm[0];
-#neighbours = est.nearestNeighbours(swarm, targDrone, 1.0);
-#points = np.zeros((2, len(neighbours)));
-#for ind in xrange(len(neighbours)):
-#    points[:,ind] = neighbours[ind];
-##points = sw.extractPos(swarm);
-#distribution = est.GaussianKde(points,X,Y)        
+                            
 
 #---------------------per scene logistics ----------------------------#
 # Generate velocity visualization
 fig, simAx = plt.subplots();
 simAx.set_title("Velocity field visualization");
+# initialize velocity and position
 velField = vf.showVel(swarm, simAx,X,Y, False);
 swarmPlot  = sw.showSwarm(swarm, simAx);
+points = sw.extractPos(swarm);
+distribution = est.GaussianKde(points,X,Y)       
+heatMap = simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
+                       extent=[0, 2*np.pi, 0, 2*np.pi]);
+fig.colorbar(heatMap);                       
+simAx.set_xlim([0, xMax]);
+simAx.set_ylim([0, yMax]);
 
-def simulateKernel(swarmPlot, velField):
-        
+# simulateKernel is called per scene
+def simulateKernel(swarmPlot, velField,heatMap):
+    heatMap.remove();
     nSwarmPlot = sw.moveSwarm(swarmPlot, simAx, swarm);
     nVelField = vf.updateVel(velField, simAx, X,Y,swarm);
-    simAx.set_xlim([0, xMax])
-    simAx.set_ylim([0, yMax])
-#    neighbours = est.nearestNeighbours(swarm, targDrone, 1.0);
-#    points = np.zeros((2, len(neighbours)));
-#    for ind in xrange(len(neighbours)):
-#        points[:,ind] = neighbours[ind];
-#    distribution = est.GaussianKde(points,X,Y)    
-#    simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
-#    extent=[0, 2*np.pi, 0, 2*np.pi]);                    
-    return nSwarmPlot, nVelField;
+    points = sw.extractPos(swarm);
+    distribution = est.GaussianKde(points,X,Y)       
+    nheatMap = simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
+                           extent=[0, 2*np.pi, 0, 2*np.pi]);                       
+    return nSwarmPlot, nVelField, nheatMap;
 
 #-------------- show results ------------------#
-mv.makeMovie(fig, swarmPlot, velField, 30, simulateKernel);
+mv.makeMovie(fig, swarmPlot, velField, heatMap, 30, simulateKernel);
 plt.close('all');
-#fig, velField = vf.showField(X,Y,U,V, returnHandle =True);            
-#velField.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
-#                extent=[0, xMax, 0, yMax])
-#swarmPlot  = sw.showSwarm(swarm,velField);
-#velField.set_xlim([0, xMax])
-#velField.set_ylim([0, yMax])
-#plt.show()
-#   
+

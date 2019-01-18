@@ -63,7 +63,6 @@ def extractPos(swarm):
     dataNum =  len(swarm);
     points= np.zeros((2, dataNum));
     droneIter = 0;
-
     for drone in swarm:
         points[0, droneIter] = drone.x();
         points[1, droneIter] = drone.y();

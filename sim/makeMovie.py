@@ -19,7 +19,7 @@ of working with even the Agg backend. This is not recommended for use in an
 interactive setting.
 
 """
-def makeMovie(fig,  swarmPlot, velField, Time, sceneGen = None):
+def makeMovie(fig,  swarmPlot, velField, heatMap, Time, sceneGen = None):
     FFMpegWriter = manimation.writers['ffmpeg']
     metadata = dict(title='Movie Test', artist='Matplotlib',
                     comment='Movie support!');
@@ -27,11 +27,12 @@ def makeMovie(fig,  swarmPlot, velField, Time, sceneGen = None):
     
 #    fig, velField = vf.showField(X,Y,U,V, returnHandle =True);
 #    swarmPlot  = sw.showSwarm(swarm,velField);
-    with writer.saving(fig, "swarm_sim_density_noVel.mp4", 100):
+    with writer.saving(fig, "swarm_sim_density_heat.mp4", 100):
         for i in range(Time):
             if sceneGen != None:
-                nSwarmPlot,nvelField = sceneGen(swarmPlot,velField);#                                
+                nSwarmPlot,nvelField,nHeatMap = sceneGen(swarmPlot,velField,heatMap);#                                
             swarmPlot = nSwarmPlot;
             velField = nvelField;
+            heatMap = nHeatMap;
             writer.grab_frame();
             
