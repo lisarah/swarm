@@ -6,6 +6,7 @@ Created on Mon Jan 07 18:17:33 2019
 """
 import sim.makeMovie as mv
 import sim.swarm as sw
+import sim.velocityFields as vf
 import numpy as np
 import random as rn
 import matplotlib.pyplot as plt
@@ -27,7 +28,14 @@ for d in range(droneNum):
     print xInit, "  ", yInit;
     swarm.append(sw.drone(xInit, yInit, 
                           xIndMax - 1, yIndMax - 1, resolution));
+#---------- per scene logistics ------------#
+fig, velField = vf.showField(X,Y,U,V, returnHandle =True);
+swarmPlot  = sw.showSwarm(swarm,velField);
+
+def simulateSwarm(swarmPlot):
+    nSwarmPlot = sw.moveSwarm(swarmPlot, velField, U,V, swarm);              
+    return nSwarmPlot;
     
 #-------------- make movie ------------------#
-mv.makeMovie(X,Y,U,V, swarm, 30);
+mv.makeMovie(fig, swarmPlot, 30, simulateSwarm);
 plt.close('all');

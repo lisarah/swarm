@@ -25,13 +25,10 @@ class drone:
     def y(self):
         return self.yInd *self.resolution;
     
-    def increment(self, velX, velY): 
+    def increment(self): 
         # given current velocity, increment current x/y indices
-        xPos = self.x() + velX;
-        yPos = self.y() + velY;
-#        print xPos, "  ", yPos;
-        self.vx = velX; 
-        self.vy = velY;
+        xPos = self.x() + self.vx;
+        yPos = self.y() + self.vy;
 #        print int(xPos/self.resolution), "  ",  int(yPos/self.resolution);
         self.xInd = int(round(xPos/self.resolution)); 
         self.yInd = int(round(yPos/self.resolution));
@@ -45,20 +42,21 @@ class drone:
     def distance(self, drone):
         return math.hypot(self.x() - drone.x(), self.y() - drone.y());
           
-def moveSwarm(swarmPlot, velField, VX, VY, swarm):
+def moveSwarm(swarmPlot, simAx, swarm):
     swarmPlot.remove();
     for drone in swarm:
-        drone.increment(VX[drone.yInd,drone.xInd], VY[drone.yInd,drone.xInd]);
-    newSwarm = showSwarm(swarm, velField);    
+        drone.increment();
+    newSwarm = showSwarm(swarm, simAx);    
     return newSwarm;
 
-def showSwarm(swarm, velField):
+def showSwarm(swarm, simAx):
     swarmX = []; swarmY = [];
     for drone in swarm:
         swarmX.append(drone.x());
         swarmY.append(drone.y());
 
-    newPos = velField.scatter(swarmX, swarmY, color='r', s=15);
+    newPos = simAx.scatter(swarmX, swarmY, color='r', s=15);
+
     return newPos;
 
 def extractPos(swarm):

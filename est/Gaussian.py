@@ -8,7 +8,12 @@ This is also useful:
 Another kde to check out is scikit-learn:
     https://scikit-learn.org/stable/modules/density.html    
 """    
-def GaussianKde(points, X,Y):
+def GaussianKde(points, X,Y,isSwarm = False):
+    if isSwarm:
+        neighbours = points;
+        points = np.zeros((2, len(neighbours)));
+        for ind in xrange(len(neighbours)):
+            points[:,ind] = neighbours[ind];
     bandFactor = 1.0; # bandwith of Gaussian used
     # Take input swarm object with k many 
     kde = st.gaussian_kde(points, bandFactor);
@@ -19,6 +24,8 @@ def GaussianKde(points, X,Y):
     v = kde(mesh).reshape((dim1, dim2)) 
     # v returns the values of kde at (X,Y)
     return v;
+
+
 
 def nearestNeighbours(swarm, curDrone, radius):
     neighbours=[];
@@ -47,8 +54,8 @@ class localGaussian:
 
     def grad(self,x,y):
         gradient = np.zeros(2);
-        pos = np.array([x,y])
-        invCov = np.linalg.inv(gradient);
+        pos = np.array([x,y]);
+        invCov = np.linalg.inv(self.cov);
         for gauss in self.neighbourGauss:
             gradient += gauss.pdf(pos)*invCov.dot(pos - gauss.mean);
         

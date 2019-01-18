@@ -38,10 +38,24 @@ for ind in xrange(len(neighbours)):
     points[:,ind] = neighbours[ind];
 #points = sw.extractPos(swarm);
 distribution = est.GaussianKde(points,X,Y)        
+targDrone = swarm[0];
+#---------------------per scene logistics ----------------------------#
+fig, simAx = vf.showField(X,Y,U,V, returnHandle =True);
+swarmPlot  = sw.showSwarm(swarm,simAx);
 
+def simulateKernel(swarmPlot):
+    nSwarmPlot = sw.moveSwarm(swarmPlot, simAx, U,V, swarm);
+    neighbours = est.nearestNeighbours(swarm, targDrone, 1.0);
+    points = np.zeros((2, len(neighbours)));
+    for ind in xrange(len(neighbours)):
+        points[:,ind] = neighbours[ind];
+    distribution = est.GaussianKde(points,X,Y)       
+    simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
+    extent=[0, 2*np.pi, 0, 2*np.pi]);                    
+    return nSwarmPlot;
 
 #-------------- show results ------------------#
-mv.makeMovie(X,Y,U,V, swarm, 30, True);
+mv.makeMovie(fig, swarmPlot, 30, simulateKernel);
 plt.close('all');
 #fig, velField = vf.showField(X,Y,U,V, returnHandle =True);            
 #velField.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
