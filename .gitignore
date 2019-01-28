@@ -2,3 +2,5 @@
 *.ipynb_checkpoints/
 *.dylan
 *.mp4
+*.png
+*.zip
