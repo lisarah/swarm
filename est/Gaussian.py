@@ -9,12 +9,13 @@ Another kde to check out is scikit-learn:
     https://scikit-learn.org/stable/modules/density.html    
 """    
 def GaussianKde(points, X,Y,isSwarm = False):
-    if isSwarm:
+    if isSwarm: # change format if input is position list
         neighbours = points;
         points = np.zeros((2, len(neighbours)));
         for ind in xrange(len(neighbours)):
             points[:,ind] = neighbours[ind];
-    bandFactor = 1.0; # bandwith of Gaussian used
+            
+    bandFactor = 2.0; # bandwith of Gaussian used
     # Take input swarm object with k many 
     kde = st.gaussian_kde(points, bandFactor);
     # We reshape the grid for the kde() function.
@@ -26,13 +27,12 @@ def GaussianKde(points, X,Y,isSwarm = False):
     return v;
 
 
-
 def nearestNeighbours(swarm, curDrone, radius):
     neighbours=[];
     for drone in swarm:
-        if drone.id != 0:
+        if drone.id != -10:
             if curDrone.distance(drone) < radius:
-                neighbours.append(np.array([drone.x(), drone.y()]));
+                neighbours.append(np.array([drone.x, drone.y]));
     return neighbours;
 
 class localGaussian:
@@ -42,13 +42,13 @@ class localGaussian:
         neighbours = nearestNeighbours(swarm, drone, radius);
         self.neighbourGauss = [];
         for drone in neighbours:
+            # TODO: Here I actually need to do convolution
             self.neighbourGauss.append(st.multivariate_normal(mean=drone, cov = self.cov))
             
     def eval(self, x,y):
         density = 0;
         for gauss in self.neighbourGauss:
             density += gauss.pdf([x,y]);
-        
         density = density/len(self.neighbourGauss);
         return density;
 
@@ -57,6 +57,7 @@ class localGaussian:
         pos = np.array([x,y]);
         invCov = np.linalg.inv(self.cov);
         for gauss in self.neighbourGauss:
+            # TODO: After convolution change this may change too
             gradient += gauss.pdf(pos)*invCov.dot(pos - gauss.mean);
         
         gradient = gradient/len(self.neighbourGauss);

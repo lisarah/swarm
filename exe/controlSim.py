@@ -6,7 +6,6 @@ Created on Tue Jan 15 23:41:15 2019
 @author: sarahli
 """
 import numpy as np
-import random as rn
 import matplotlib.pyplot as plt
 import est.Gaussian as est
 import sim.swarm as sw
@@ -22,27 +21,20 @@ xIndMax, yIndMax = X.shape;
 
 
 #-------------- add drones ------------------#
-droneNum = 100;
-swarm = [];
-print " Initial Positions ";
-for d in range(droneNum):
-    xInit = rn.randint(0, xIndMax/3); yInit = rn.randint(0, yIndMax/3);
-    print xInit, "  ", yInit;
-    swarm.append(sw.drone(xInit, yInit, 
-                          xIndMax - 1, yIndMax - 1, resolution, d+1));
-                            
+swarm = sw.initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 100)
 
 #---------------------per scene logistics ----------------------------#
 # Generate velocity visualization
 fig, simAx = plt.subplots();
 simAx.set_title("Velocity field visualization");
+
 # initialize velocity and position
 velField = vf.showVel(swarm, simAx,X,Y, False);
 swarmPlot  = sw.showSwarm(swarm, simAx);
 points = sw.extractPos(swarm);
 distribution = est.GaussianKde(points,X,Y)       
 heatMap = simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
-                       extent=[0, 2*np.pi, 0, 2*np.pi]);
+                       extent=[0, xMax, 0, yMax]);
 fig.colorbar(heatMap);                       
 simAx.set_xlim([0, xMax]);
 simAx.set_ylim([0, yMax]);
@@ -55,7 +47,7 @@ def simulateKernel(swarmPlot, velField,heatMap):
     points = sw.extractPos(swarm);
     distribution = est.GaussianKde(points,X,Y)       
     nheatMap = simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
-                           extent=[0, 2*np.pi, 0, 2*np.pi]);                       
+                           extent=[0, xMax, 0, yMax]);                       
     return nSwarmPlot, nVelField, nheatMap;
 
 #-------------- show results ------------------#

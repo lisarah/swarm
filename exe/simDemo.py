@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jan 07 18:17:33 2019
+Purpose: generate random swarms, 
 
 @author: sarah
 """
@@ -20,14 +21,8 @@ xIndMax, yIndMax = X.shape;
 
 
 #-------------- add drones ------------------#
-droneNum = 20;
-swarm = [];
-print " Initial Positions ";
-for d in range(droneNum):
-    xInit = rn.randint(0, xIndMax); yInit = rn.randint(0, yIndMax);
-    print xInit, "  ", yInit;
-    swarm.append(sw.drone(xInit, yInit, 
-                          xIndMax - 1, yIndMax - 1, resolution));
+swarm = sw.initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 20)
+
 #---------- per scene logistics ------------#
 fig, velField = vf.showField(X,Y,U,V, returnHandle =True);
 swarmPlot  = sw.showSwarm(swarm,velField);
