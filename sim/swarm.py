@@ -29,25 +29,25 @@ class drone:
         self.id = did;
         
     def xInd(self):
+        if int(self.x/self.resolution) > 32:
+            print "exceeded";
         return int(self.x/self.resolution);
     
     def yInd(self):
+        if int(self.x/self.resolution) > 32:
+            print "exceeded";
         return int(self.y/self.resolution);
     
     def increment(self): 
         # given current velocity, increment current x/y indices
         self.x = self.x + self.vx;
         self.y = self.y + self.vy;  
-        if self.x > self.xMax or self.y > self.yMax:
-            print "yPos: ",self.y;
-            print "xPos: ",self.x;
-
         
     def __setattr__(self, name, value): 
         if name == "x":
-            value =  max( min(self.xMax, value), 0);
+            value =  max( min(self.__dict__['xMax'], value), 0);
         elif name == "y": 
-            value = max( min(self.yMax, value), 0);
+            value = max( min(self.__dict__['yMax'], value), 0);
         self.__dict__[name] = value;  
         
     def distance(self, drone):
@@ -63,8 +63,8 @@ def moveSwarm(swarmPlot, simAx, swarm):
 def showSwarm(swarm, simAx):
     swarmX = []; swarmY = [];
     for drone in swarm:
-        swarmX.append(drone.x);
-        swarmY.append(drone.y);
+        swarmX.append(1.0*drone.x);
+        swarmY.append(1.0*drone.y);
 
     newPos = simAx.scatter(swarmX, swarmY, color='r', s=15);
 
@@ -85,10 +85,10 @@ def initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 10, verbose = True
     if verbose:
         print " Initial Positions ";
     for d in range(num):
-        xInit = rn.uniform(0, xMax); yInit = rn.uniform(0, yMax);
+        xInit = rn.uniform(0, xMax/3); yInit = rn.uniform(0, yMax/3);
         if verbose:
             print xInit, "  ", yInit;
-        swarm.append(drone(xInit, yInit, xIndMax - 1, yIndMax - 1, resolution, d));
+        swarm.append(drone(xInit, yInit, xMax, yMax, resolution, d));
     return swarm;
     
     

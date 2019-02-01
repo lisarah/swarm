@@ -36,8 +36,9 @@ def showVel(swarm, simAx, X,Y, visualize):
     
     for drone in swarm:
         localGauss = est.localGaussian(swarm, drone, 1.0);#last parameter is radius
-        vel= df.velocity(localGauss, drone, 0.5);
-
+        vel= df.velocity(localGauss, drone, 0.08);
+        if drone.yInd() >= 32 or drone.xInd() >= 32:
+            print "Stop"
         U[drone.yInd(), drone.xInd()] = vel[0];
         V[drone.yInd(), drone.xInd()] = vel[1];
 #        print vel;

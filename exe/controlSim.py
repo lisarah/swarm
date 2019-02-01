@@ -21,14 +21,14 @@ xIndMax, yIndMax = X.shape;
 
 
 #-------------- add drones ------------------#
-swarm = sw.initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 100)
+swarm = sw.initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 50)
 
 #---------------------per scene logistics ----------------------------#
 # Generate velocity visualization
 fig, simAx = plt.subplots();
 simAx.set_title("Velocity field visualization");
 
-# initialize velocity and position
+# initialize velocity and position   
 velField = vf.showVel(swarm, simAx,X,Y, False);
 swarmPlot  = sw.showSwarm(swarm, simAx);
 points = sw.extractPos(swarm);
@@ -47,10 +47,11 @@ def simulateKernel(swarmPlot, velField,heatMap):
     points = sw.extractPos(swarm);
     distribution = est.GaussianKde(points,X,Y)       
     nheatMap = simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
-                           extent=[0, xMax, 0, yMax]);                       
+                           extent=[0, xMax, 0, yMax]);   
+
     return nSwarmPlot, nVelField, nheatMap;
 
 #-------------- show results ------------------#
-mv.makeMovie("swarm_sim_diff.mp4",fig, swarmPlot, velField, heatMap, 30, simulateKernel);
+mv.makeMovie("swarm_sim_diff.mp4",fig, swarmPlot, velField, heatMap, 100, simulateKernel);
 plt.close('all');
 
