@@ -85,7 +85,7 @@ def initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 10, verbose = True
     if verbose:
         print " Initial Positions ";
     for d in range(num):
-        xInit = rn.uniform(0, xMax/3); yInit = rn.uniform(0, yMax/3);
+        xInit = rn.uniform(0, xMax); yInit = rn.uniform(0, yMax);
         if verbose:
             print xInit, "  ", yInit;
         swarm.append(drone(xInit, yInit, xMax, yMax, resolution, d));

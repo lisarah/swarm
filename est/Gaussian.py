@@ -37,7 +37,7 @@ def nearestNeighbours(swarm, curDrone, radius):
 
 class localGaussian:
     def __init__(self, swarm, drone, radius, bandFactor = 0.2):          
-        self.bandFactor = 0.2;
+        self.bandFactor = bandFactor;
         self.cov = np.identity(2)*self.bandFactor;
         neighbours = nearestNeighbours(swarm, drone, radius);
         self.neighbourGauss = [];
@@ -58,10 +58,46 @@ class localGaussian:
         invCov = np.linalg.inv(self.cov);
         for gauss in self.neighbourGauss:
             # TODO: After convolution change this may change too
-            gradient += gauss.pdf(pos)*invCov.dot(pos - gauss.mean);
+            gradient += (gauss.pdf(pos))*invCov.dot(pos - gauss.mean);
         
         gradient = gradient/len(self.neighbourGauss);
         return gradient;
             
         
-    
+class desiredDensity:
+    def __init__(self, bandFactor = 0.35):          
+        self.bandFactor = bandFactor;
+        self.cov = np.identity(2)*self.bandFactor;
+        gaussians = [np.array([np.pi/3, 4*np.pi/3]),
+                     np.array([np.pi/3, 4*np.pi/3]),
+                     np.array([5*np.pi/3, 4*np.pi/3]),
+                     np.array([5*np.pi/3, 4*np.pi/3]),
+                     np.array([np.pi/3, np.pi/2]),
+                     np.array([np.pi/3, np.pi/2]),
+                     np.array([3*np.pi/4, 2.5*np.pi/6]),
+                     np.array([np.pi, np.pi/3]),
+                     np.array([5*np.pi/4, 2.5*np.pi/6]),
+                     np.array([5*np.pi/3, np.pi/2])]
+        self.densities = [];
+        for gauss in gaussians:
+            # TODO: Here I actually need to do convolution
+            self.densities.append(st.multivariate_normal(mean=gauss, cov = self.cov))
+            
+    def eval(self, x,y):
+        density = 0;
+        for gauss in self.densities:
+            density += gauss.pdf([x,y]);
+        density = density/len(self.densities);
+        return density;
+
+    def grad(self,x,y):
+        gradient = np.zeros(2);
+        pos = np.array([x,y]);
+        invCov = np.linalg.inv(self.cov);
+        for gauss in self.densities:
+            # TODO: After convolution change this may change too
+            gradient += (gauss.pdf(pos) )*invCov.dot(pos - gauss.mean);
+        
+        gradient = gradient/len(self.densities);
+        return gradient;
+                
