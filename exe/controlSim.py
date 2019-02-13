@@ -21,7 +21,7 @@ xIndMax, yIndMax = X.shape;
 
 
 #-------------- add drones ------------------#
-swarm = sw.initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 50)
+swarm = sw.initSwarm(xMax, yMax, xIndMax, yIndMax, resolution, num = 20)
 
 #---------------------per scene logistics ----------------------------#
 # Generate velocity visualization
