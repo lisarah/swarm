@@ -5,31 +5,26 @@ Created on Sat Jan 26 17:35:58 2019
 @author: Dylan
 """
 
-import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.animation import FFMpegWriter
+import numpy as np
+import matplotlib.animation as animation
 
-# Fixing random state for reproducibility
-np.random.seed(19680801)
+def main():
+    numframes = 100
+    numpoints = 10
+    color_data = np.random.random((numframes, numpoints))
+    x, y, c = np.random.random((3, numpoints))
 
+    fig = plt.figure()
+    scat = plt.scatter(x, y, c=c, s=100)
 
-metadata = dict(title='Movie Test', artist='Matplotlib',
-                comment='Movie support!')
-writer = FFMpegWriter(fps=15, metadata=metadata)
+    ani = animation.FuncAnimation(fig, update_plot, frames=xrange(numframes),
+                                  fargs=(color_data, scat))
+    plt.show()
+    ani.save('scatter_test.mp4')
 
-fig = plt.figure()
-l, = plt.plot([], [], 'k-o')
+def update_plot(i, data, scat):
+    scat.set_array(data[i])
+    return scat,
 
-plt.xlim(-5, 5)
-plt.ylim(-5, 5)
-
-x0, y0 = 0, 0
-
-with writer.saving(fig, "writer_test.mp4", 100):
-    for i in range(100):
-        x0 += 0.1 * np.random.randn()
-        y0 += 0.1 * np.random.randn()
-        l.set_data(x0, y0)
-        writer.grab_frame()
+main()

@@ -1,19 +1,15 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb  7 17:11:01 2019
+Created on Tue Jan 15 23:41:15 2019
 
-@author: Dylan
+@author: sarahli
 """
-
-
 import numpy as np
+import matplotlib.pyplot as plt
+import sim.makeMovie as mv
 import scipy.linalg as sl
 import cvxpy as cvx
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.animation as manimation
-
 
 d = 2 # number of spatial dimensions
 ti = 0.0 # initial time
@@ -100,19 +96,39 @@ for j in range(Nagents):
         k += 1
 # trajectories[:, j, k] is the location of agent j at t=times[k]
 
-# =============================================================================
-# FFMpegWriter = manimation.writers['ffmpeg']
-# metadata = dict(title='Swarm Movie :)', artist='ACL',
-#                 comment='I hope this works!')
-# writer = FFMpegWriter(fps=30, metadata=metadata)
-# fig = plt.figure()
-# l, = plt.plot([], [], 'k-o')
-# 
-# plt.xlim(-0.1, 1.1)
-# plt.ylim(-0.1, 1.1)
-# 
-# with writer.saving(fig, "swarm_movie.mp4", nt):
-#     for k in range(nt):
-#         l.set_data(trajectories[0, :, k], trajectories[1, :, k], 'ok')
-#         writer.grab_frame()
-# =============================================================================
+#---------------------per scene logistics ----------------------------#
+# Generate velocity visualization
+swarmX = trajectories[0, :, 0];
+swarmY = trajectories[1, :, 0]; 
+fig, simAx = plt.subplots();
+simAx.set_title("Velocity field visualization");
+
+# initialize velocity and position   
+#velField = vf.showVel(swarm, simAx,X,Y, False);
+#swarmPlot  = sw.showSwarm(swarm, simAx);
+#points = sw.extractPos(swarm);
+#distribution = est.GaussianKde(points,X,Y)       
+#heatMap = simAx.imshow(np.flipud(distribution), cmap=plt.cm.gist_earth_r, 
+#                       extent=[0, xMax, 0, yMax]);
+#fig.colorbar(heatMap);  
+plt.axis('equal')             
+simAx.set_xlim([0, 1]);
+simAx.set_ylim([0, 1]);
+swarmPlot = simAx.scatter(targets[0,:], targets[1,:], marker='x', color='b', s=30);
+swarmPlot = simAx.scatter(swarmX, swarmY, color='r', s=15);
+
+# simulateKernel is called per scene
+def simulateKernel(swarmPlot, velField,heatMap,time):
+    swarmPlot.remove();
+    # update swarmX and swarmY
+    
+    swarmX = trajectories[0, :, time];
+    swarmY = trajectories[1, :, time]; 
+    nSwarmPlot = simAx.scatter(swarmX, swarmY, color='r', s=15);
+    
+    return nSwarmPlot, None, None;
+
+#-------------- show results ------------------#
+mv.makeMovie("LP_swarm_Dylan.mp4",fig, swarmPlot, None, None, nt-1, simulateKernel,useTime=True);
+plt.close('all');
+
