@@ -11,8 +11,8 @@ import scipy.linalg as sl
 import cvxpy as cvx
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.animation as manimation
+# import matplotlib.pyplot as plt
+# import matplotlib.animation as manimation
 
 
 d = 2 # number of spatial dimensions

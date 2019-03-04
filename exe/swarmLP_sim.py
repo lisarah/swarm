@@ -31,7 +31,7 @@ def Wc(t):
             [(tau**3/3.0)*I, (tau**2/2.0)*I],
             [(tau**2/2.0)*I, tau*I]
             ])
-    
+
 tdiff = tf - ti
 WcfInverse = np.block([
         [(12.0/tdiff**3)*I, (-6.0/tdiff**2)*I],
@@ -101,7 +101,7 @@ for j in range(Nagents):
 swarmX = trajectories[0, :, 0];
 swarmY = trajectories[1, :, 0]; 
 fig, simAx = plt.subplots();
-simAx.set_title("Velocity field visualization");
+simAx.set_title("LP-Based Optimal Swarm Guidance");
 
 # initialize velocity and position   
 #velField = vf.showVel(swarm, simAx,X,Y, False);
