@@ -85,5 +85,5 @@ def simulateKernel(swarmPlot, velField, heatMap, time):
     return nSwarmPlot, None, None;
 
 #-------------- show results ------------------#
-mv.makeMovie("Hill_Demo.mp4", fig, swarmPlot, None, None, nt-1, simulateKernel, useTime=True);
+mv.makeMovie("Hill_Demo_2.mp4", fig, swarmPlot, None, None, nt-1, simulateKernel, useTime=True);
 plt.close('all');

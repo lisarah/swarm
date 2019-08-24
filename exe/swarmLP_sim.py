@@ -15,7 +15,8 @@ d = 2 # number of spatial dimensions
 ti = 0.0 # initial time
 tf = 1.0 # final time
 nt = 101 # number of time steps
-Nagents = 40 # number of agents
+rootNagents = 8
+Nagents = rootNagents**2 # number of agents
 Ntargets = Nagents # number of targets (should equal Nagents for now)
 
 times = np.linspace(ti, tf, num=nt)
@@ -39,8 +40,25 @@ WcfInverse = np.block([
         ]) # inverse of the controllability Gramian over the interval [ti, tf]
 # WcfInverse for the double integrator system was found analytically
     
-X0 = np.random.rand(d,Nagents) # X0(:,j) is the initial position of agent j
-targets = np.random.rand(d,Ntargets) #targets(:,l) is the position of target l
+#X0 = np.random.rand(d,Nagents) # X0(:,j) is the initial position of agent j
+#targets = np.random.rand(d,Ntargets) #targets(:,l) is the position of target l
+theOriginal1 = np.kron(np.linspace(0.0, 1.0, num=rootNagents), np.ones((1, rootNagents)))
+theOriginal2 = np.kron(np.ones((1, rootNagents)), np.linspace(0.0, 1.0, num=rootNagents))
+theOriginal = np.vstack((theOriginal1, theOriginal2)) # a square grid of side length 1
+
+X0 = np.zeros((2,Nagents))
+targets = np.zeros((2,Nagents))
+point1 = [0.01, 0.01] # bottom-left corner of the starting square
+a1 = [0.05, 0.3] # dimensions of initial rectangle
+point2 = [0.3, 0.4] # bottom-left corner of the final square
+a2 = [0.69, 0.19] # dimensions of final rectangle
+
+
+for j in range(Nagents):
+    z = theOriginal[:,j]
+    X0[:,j] = point1 + a1*z
+    targets[:,j] = point2 + a2*z
+
 C = np.full((Nagents, Ntargets), np.Inf) # cost of sending agent i to target j
 eAtdiff = sl.expm(tdiff*A)
 for j in range(Ntargets):

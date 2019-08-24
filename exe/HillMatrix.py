@@ -11,12 +11,17 @@ import numpy as np
 # the [[radial], [transverse], [out-of-plane]] rotating reference frame.
 
 
-def HillMatrix(a, d):
-    # "a" is the orbit radius
+def HillMatrix(a, d, units):
+    # "a" is the orbit semimajor axis (radius)
     # "d" is the number of spatial dimensions: 2 for planar motion, 3 for general motion
-    # Re = 6.3781366e6  # equatorial radius of Earth, in meters
-    muEarth = 3.986004415e14 # Earth gravitational parameter, in m^3*s^-2
-    n = (muEarth/a**3)**0.5 # angular frequency of the orbit, in m*s^-1
+    # If units=='SI', then use SI units. Otherwise, normalize muEarth==1.
+    if units == 'SI':
+        # Re = 6.3781366e6  # equatorial radius of Earth, in meters
+        muEarth = 3.986004415e14 # Earth gravitational parameter, in m^3*s^-2
+    elif units == 'normalized':
+        muEarth = 1.0
+        
+    n = (muEarth/a**3)**0.5 # angular frequency of the orbit
     Od = np.zeros([d, d])
     Id = np.eye(d)
     if d==2:
